@@ -4,36 +4,34 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.graphics.Path
 import android.graphics.drawable.AnimationDrawable
-import android.media.MediaCodec
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.view.animation.PathInterpolator
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player.REPEAT_MODE_ALL
 import com.google.android.exoplayer2.ui.StyledPlayerView
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var buttonAnimation: AnimationDrawable
-    private val timeCount = MutableLiveData<Int>()
-    lateinit var playerView: StyledPlayerView
+    private lateinit var playerView: StyledPlayerView
 
     @SuppressLint("Recycle")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        hideSystemUI()
+
         val timeCountTextViewL = findViewById<TextView>(R.id.leftCount)
         val timeCountTextViewR = findViewById<TextView>(R.id.rightCount)
         val timeLeft = findViewById<ImageView>(R.id.leftShadow)
@@ -91,5 +89,19 @@ class MainActivity : AppCompatActivity() {
             start()
         }
 
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemUI()
+        }
+    }
+
+    private fun hideSystemUI() {
+        val decorView = window.decorView
+        decorView.systemUiVisibility = ( // Hide the nav bar and status bar
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 }
